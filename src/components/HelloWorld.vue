@@ -13,10 +13,10 @@
     </div>
 
     <div id="wholeFile">
-      <a href="http://localhost:8000/downloadW/">
+      <a href="https://abhaya.pythonanywhere.com/downloadW/">
         <button class="btn btn-primary">Whole Day (CSV)</button>
       </a>
-      <a :href="`http://localhost:8000/downloadC?search=${search}`">
+      <a :href="`http://abhaya.pythonanywhere.com/downloadC?search=${search}`">
         <button class="btn btn-secondary">Current Result (CSV)</button>
       </a>
       <div v-if="!noresult">{{items.length}} items found.</div>
@@ -88,7 +88,7 @@ export default {
         this.noresult = true;
         return;
       }
-      fetch("http://127.0.0.1:8000/search/?search=" + this.search)
+      fetch("https://abhaya.pythonanywhere.com/search/?search=" + this.search)
         .then(response => response.json())
         .then(data => {
           console.log(data.result);
