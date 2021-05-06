@@ -25,17 +25,28 @@ npm run lint
 
 ## Hosting Details
 <br/>
+After build,
+in the root  of the vue project directory, execute:
 
-#### To setup a firebase hosting account:
-
-https://firebase.google.com/docs/cli
-
+Initialise the project:
+```
+firebase init
+```
 While setting up the firebase project,
 set the public folder to `dist`.
 
 https://cli.vuejs.org/guide/deployment.html#firebase
-
-In the root  of the vue project directory, execute:
+<br/><br/><br/>
+Select project:
+```
+firebase use qshareprice
+```
+Deploy:
 ```
 firebase deploy --only hosting
 ```
+#### To setup a firebase hosting account:
+
+https://firebase.google.com/docs/cli
+
+
