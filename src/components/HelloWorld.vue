@@ -8,7 +8,7 @@
         class="form-control"
         v-model="search"
         @input="setsearch"
-        placeholder="Search"
+        placeholder="Search by Name"
       />
     </div>
 
@@ -19,11 +19,17 @@
       <a :href="`http://abhaya.pythonanywhere.com/downloadC?search=${search}`">
         <button class="btn btn-secondary">Current Result (CSV)</button>
       </a>
-      <div v-if="!noresult">{{items.length}} items found.</div>
+      <div v-if="!loading" style="padding: 10px">
+        <a style="font-weight:bold;font-size:20px;">{{ items.length }}</a> names
+        found.
+      </div>
     </div>
-    <div style="place-content:center;display:flex;">
+    <div style="place-content:center;display:flex;flex-direction:column">
+      <div v-if="loading" style="font-weight:bold;font-size:20px;padding: 20px; font-color:blue; ">
+        Loading...
+      </div>
       <div
-        v-if="!noresult"
+        v-if="!loading"
         style="display:flex;place-content:center;place-self:center;flex-direction:column;"
       >
         <ul style="margin-bottom:4px">
@@ -50,7 +56,9 @@
               class="list-group-item list-group-item-action"
             >
               <div style="display:flex;place-content:center;">
-                <div id="sharename" style="font-weight: bolder !important; ">{{ item.name }}</div>
+                <div id="sharename" style="font-weight: bolder !important; ">
+                  {{ item.name }}
+                </div>
                 <div id="sharename">{{ item.code }}</div>
                 <div id="sharename">{{ item.open }}</div>
                 <div id="sharename">{{ item.close }}</div>
@@ -62,8 +70,6 @@
         </div>
       </div>
     </div>
-
-    <div v-if="noresult">No Results Found</div>
   </div>
 </template>
 
@@ -72,10 +78,22 @@ export default {
   name: "HelloWorld",
   data() {
     return {
-      noresult: true,
+      noresult: false,
+      loading: true,
       search: "",
-      items: []
+      items: [],
     };
+  },
+  beforeMount() {
+    this.loading = true;
+    fetch("https://abhaya.pythonanywhere.com/search/?search=*")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.result);
+        this.items = data.result;
+        this.noresult = false;
+        this.loading = false;
+      });
   },
   methods: {
     created() {},
@@ -84,22 +102,24 @@ export default {
     },
     setsearch: function(event) {
       this.search = event.target.value;
+      var key="";
       if (this.search === "") {
-        this.noresult = true;
-        return;
+        key="*";
       }
-      fetch("https://abhaya.pythonanywhere.com/search/?search=" + this.search)
-        .then(response => response.json())
-        .then(data => {
+      else
+      key=this.search
+      fetch("https://abhaya.pythonanywhere.com/search/?search=" + key)
+        .then((response) => response.json())
+        .then((data) => {
           console.log(data.result);
           this.items = data.result;
           this.noresult = false;
         });
-    }
+    },
   },
   props: {
-    msg: String
-  }
+    msg: String,
+  },
 };
 </script>
 
